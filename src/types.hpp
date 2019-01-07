@@ -3,6 +3,8 @@
 
 #include <map>
 #include <mutex>
+#include <open62541.h>
+#include <functional>
 
 #include "string_split.hpp"
 
@@ -24,6 +26,8 @@ struct address {
 
 	static const std::map<std::string, Datatype> DatatypeFromString;
 
+	void* v = nullptr;
+
 	address() = default;
 
 	explicit address(const std::string& s, const std::string& d){
@@ -37,9 +41,54 @@ struct address {
 		}
 
 		datatype = address::DatatypeFromString.at(d);
+
+		switch(datatype){
+		    case address::Datatype::Bit: {
+				v = calloc(1, sizeof(UA_Boolean));
+
+				break;
+			}
+			case address::Datatype::Byte: {
+				v = calloc(1, sizeof(UA_Byte));
+
+				break;
+			}
+			case address::Datatype::Int16: {
+				v = calloc(1, sizeof(UA_Int16));
+
+				break;
+			}
+			default: break;
+		}
 	}
 };
 
-const std::map<std::string, address::Datatype> address::DatatypeFromString = {{"BOOL", Bit}, {"BYTE", Byte}, {"INT", Int16}};
+inline const std::map<std::string, address::Datatype> address::DatatypeFromString = {{"BOOL", Bit}, {"BYTE", Byte}, {"INT", Int16}};
+
+struct operation {
+	std::map<std::string, address>* io_addresses;
+
+    enum Type {
+        Int32, UInt32, Boolean, Double, String
+    };
+
+    Type Typ;
+
+    static const std::map<operation::Type, size_t> SizeFromType;
+
+	void* v = nullptr;
+
+	std::function<void(operation*)> op;
+
+	operation(operation::Type d, std::map<std::string, address>* io, std::function<void(operation*)> op_){
+	    io_addresses = io;
+        Typ = d;
+        op = op_;
+
+        v = calloc(1, operation::SizeFromType.at(d));
+	}
+};
+
+inline const std::map<operation::Type, size_t> operation::SizeFromType = {{Int32, sizeof(UA_Int32)}, {UInt32, sizeof(UA_UInt32)}, {Boolean, sizeof(UA_Boolean)}, {Double, sizeof(UA_Double)}, {String, sizeof(UA_String)}};
 
 #endif //EAOPCUA_TYPES_HPP
