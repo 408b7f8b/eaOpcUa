@@ -4,11 +4,14 @@
 #include <map>
 #include <iostream>
 #include <unistd.h>
+#include <open62541.h>
 
 #include "types.hpp"
 #include "EA.hpp"
 
 #include "open62541.h"
+
+//#define PC
 
 static std::pair<std::string, UA_NodeId> addNode(const UA_Server* server, const std::string& name, void* value, int d, const UA_NodeId* parent){
 	if(d == -1)
@@ -31,8 +34,6 @@ static std::pair<std::string, UA_NodeId> addNode(const UA_Server* server, const 
 	UA_Server_addVariableNode((UA_Server*)server, nNodeId, *parent,
 							  parentReferenceNodeId, nNodeName,
 							  UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr, NULL, &ret);
-
-	//free(v);
 
 	return {name, ret};
 };
@@ -181,9 +182,7 @@ static void aktNode(const UA_Server* server, const operation& o, const UA_NodeId
 static void addObjekt(const UA_Server* server, const std::string& name, const UA_NodeId* parent, UA_NodeId* nodeId){
         UA_ObjectAttributes oAttr = UA_ObjectAttributes_default;
         oAttr.displayName = UA_LOCALIZEDTEXT((char*)"de-DE", (char*)name.c_str());
-        UA_Server_addObjectNode((UA_Server*)server, UA_NODEID_NULL,
-                                *parent,
-                                UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
+        UA_Server_addObjectNode((UA_Server*)server, UA_NODEID_NULL, *parent, UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
                                 UA_QUALIFIEDNAME(1, (char*)name.c_str()), UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE),
                                 oAttr, nullptr, nodeId);
 }
@@ -195,15 +194,14 @@ void server(const std::map<std::string, address>& io_addresses, const std::map<s
 
 	UA_Server *server = nullptr;
 	UA_ServerConfig *config = nullptr;
-	std::map<std::string, UA_NodeId> nodeVerzeichnisEA;
-	std::map<std::string, UA_NodeId> nodeVerzeichnisOp;
+	std::map<std::string, UA_NodeId> nodeVerzeichnisEA, nodeVerzeichnisOp;
 
     UA_NodeId objektEA, objectOp;
 
 	while(*lauf){
 		switch(state){
 			case 0:{
-				config = UA_ServerConfig_new_minimal(4840, NULL);
+				config = UA_ServerConfig_new_minimal(4840, nullptr);
 				server = UA_Server_new(config);
 
 				UA_StatusCode r1 = UA_Server_run_startup(server);

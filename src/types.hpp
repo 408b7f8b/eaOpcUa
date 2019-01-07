@@ -63,7 +63,7 @@ struct address {
 	}
 };
 
-inline const std::map<std::string, address::Datatype> address::DatatypeFromString = {{"BOOL", Bit}, {"BYTE", Byte}, {"INT", Int16}};
+const std::map<std::string, address::Datatype> address::DatatypeFromString = {{"BOOL", Bit}, {"BYTE", Byte}, {"INT", Int16}};
 
 struct operation {
 	std::map<std::string, address>* io_addresses;
@@ -89,6 +89,6 @@ struct operation {
 	}
 };
 
-inline const std::map<operation::Type, size_t> operation::SizeFromType = {{Int32, sizeof(UA_Int32)}, {UInt32, sizeof(UA_UInt32)}, {Boolean, sizeof(UA_Boolean)}, {Double, sizeof(UA_Double)}, {String, sizeof(UA_String)}};
+const std::map<operation::Type, size_t> operation::SizeFromType = {{Int32, sizeof(UA_Int32)}, {UInt32, sizeof(UA_UInt32)}, {Boolean, sizeof(UA_Boolean)}, {Double, sizeof(UA_Double)}, {String, sizeof(UA_String)}};
 
 #endif //EAOPCUA_TYPES_HPP
