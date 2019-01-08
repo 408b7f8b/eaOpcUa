@@ -1,0 +1,1 @@
+Durchfluss 1 [l/min]#funktion1#InputValue_1#2000.0

@@ -15,13 +15,7 @@ int main(int argc, char** argv) {
 	signal(SIGINT, int_handler);
 
 	std::map<std::string, address> io_addresses = readIODescription("addresses.txt");
-	std::map<std::string, operation> operations;
-
-	operation o(operation::Type::Double, &io_addresses, funktion1);
-	operation o2(operation::Type::Double, &io_addresses, funktion2);
-
-	operations.insert({"Durchfluss 1 [l/min]", o});
-	operations.insert({"Durchfluss 2 [l/min]", o2});
+	std::map<std::string, operation> operations = readOpDescription("operations.txt", &io_addresses);
 
 	server(io_addresses, operations, &lauf);
 

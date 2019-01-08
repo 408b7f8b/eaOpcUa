@@ -2,6 +2,7 @@
 #define EAOPCUA_TYPES_HPP
 
 #include <map>
+#include <vector>
 #include <mutex>
 #include <open62541.h>
 #include <functional>
@@ -75,15 +76,18 @@ struct operation {
     Type Typ;
 
     static const std::map<operation::Type, size_t> SizeFromType;
+    std::vector<std::string> input, param;
 
 	void* v = nullptr;
 
 	std::function<void(operation*)> op;
 
-	operation(operation::Type d, std::map<std::string, address>* io, std::function<void(operation*)> op_){
+	operation(operation::Type d, std::map<std::string, address>* io, std::function<void(operation*)> op_, std::vector<std::string> input_, std::vector<std::string> param_){
 	    io_addresses = io;
         Typ = d;
         op = op_;
+		input = input_;
+		param = param_;
 
         v = calloc(1, operation::SizeFromType.at(d));
 	}

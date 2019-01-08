@@ -12,4 +12,5 @@ set(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -z defs")
 
 add_executable(eaOpcUa main.cpp src/EA.hpp src/file.hpp src/server.hpp src/types.hpp ${REVPI_DIR}/piControlIf.c ${REVPI_DIR}/piControlIf.h ${OPEN62541_DIR}/open62541.c ${OPEN62541_DIR}/open62541.h src/operations.hpp)
-configure_file(${CMAKE_SOURCE_DIR}/example.txt addresses.txt COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/example_IO.txt addresses.txt COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/example_operation.txt operations.txt COPYONLY)

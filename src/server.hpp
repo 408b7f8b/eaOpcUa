@@ -11,7 +11,7 @@
 
 #include "open62541.h"
 
-//#define PC
+#define PC
 
 static std::pair<std::string, UA_NodeId> addNode(const UA_Server* server, const std::string& name, void* value, int d, const UA_NodeId* parent){
 	if(d == -1)
