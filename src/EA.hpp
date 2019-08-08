@@ -58,7 +58,8 @@ bool readBit(const std::uint16_t byte, const std::uint8_t bit){
 	sPIValue.i8uBit = bit;
 	rc = piControlGetBitValue(&sPIValue);
 
-	return rc == 0;
+	//return rc == 0;
+	return sPIValue.i8uValue;
 }
 
 bool readBit(const address& adr){

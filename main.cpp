@@ -5,7 +5,7 @@
 #include "src/file.hpp"
 #include "src/server.hpp"
 
-static bool lauf = true;
+static volatile bool lauf = true;
 
 void int_handler(int l) {
 	lauf = false;
@@ -13,6 +13,10 @@ void int_handler(int l) {
 
 int main(int argc, char** argv) {
 	signal(SIGINT, int_handler);
+	signal(SIGABRT, int_handler);
+	signal(SIGKILL, int_handler);
+	signal(SIGQUIT, int_handler);
+	signal(SIGTERM, int_handler);
 
 	std::map<std::string, address> io_addresses = readIODescription("addresses.txt");
 	std::map<std::string, operation> operations = readOpDescription("operations.txt", &io_addresses);

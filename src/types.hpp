@@ -25,7 +25,10 @@ struct address {
 
 	Datatype datatype;
 
+	bool schreibbar = false;
+
 	static const std::map<std::string, Datatype> DatatypeFromString;
+	static const std::map<Datatype, std::string> DataTypeToString;
 
 	void* v = nullptr;
 
@@ -62,9 +65,19 @@ struct address {
 			default: break;
 		}
 	}
+
+	std::string toString(){
+
+		std::string r = std::to_string(byte);
+
+		if(Typ == BIT_ADDRESS) r += "." + std::to_string(bit);
+
+		return r;
+	}
 };
 
 const std::map<std::string, address::Datatype> address::DatatypeFromString = {{"BOOL", Bit}, {"BYTE", Byte}, {"INT", Int16}};
+const std::map<address::Datatype, std::string> address::DataTypeToString = {{Bit, "BOOL"}, {Byte, "BYTE"}, {Int16, "INT"}};
 
 struct operation {
 	std::map<std::string, address>* io_addresses;

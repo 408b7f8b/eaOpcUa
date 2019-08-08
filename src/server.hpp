@@ -13,7 +13,7 @@
 
 //#define PC
 
-static std::pair<std::string, UA_NodeId> addNode(const UA_Server* server, const std::string& name, void* value, int d, const UA_NodeId* parent){
+static std::pair<std::string, UA_NodeId> addNode(const UA_Server* server, const std::string& name, void* value, int d, const std::string& description, const UA_NodeId* parent, bool writeable = false){
 	if(d == -1)
 		return {};
 
@@ -22,8 +22,9 @@ static std::pair<std::string, UA_NodeId> addNode(const UA_Server* server, const 
 	UA_Variant_setScalar(&attr.value, value, &UA_TYPES[d]);
 
 	attr.dataType = UA_TYPES[d].typeId;
-	attr.accessLevel = UA_ACCESSLEVELMASK_READ;
+	attr.accessLevel = writeable ? UA_ACCESSLEVELMASK_WRITE | UA_ACCESSLEVELMASK_READ : UA_ACCESSLEVELMASK_READ;
 	attr.displayName = UA_LOCALIZEDTEXT((char*)std::string("de-DE").c_str(), (char*)name.c_str());
+	attr.description = UA_LOCALIZEDTEXT((char*)std::string("de-DE").c_str(), (char*)description.c_str());
 
 	UA_NodeId nNodeId = UA_NODEID_STRING(1, (char*)name.c_str());
 	UA_QualifiedName nNodeName = UA_QUALIFIEDNAME(1, (char*)name.c_str());
@@ -83,7 +84,9 @@ static std::pair<std::string, UA_NodeId> addNode(const UA_Server* server, const 
 		default: break;
 	}
 
-	return addNode(server, name, v, d, parent);
+	std::string desc = "EA-Adresse: " + std::to_string(adr.byte) + "." + std::to_string(adr.bit) + "\n" + "Typ: " + address::DataTypeToString.at(adr.datatype);
+
+	return addNode(server, name, v, d, desc, parent, adr.schreibbar);
 }
 
 static std::pair<std::string, UA_NodeId> addNode(const UA_Server* server, const std::string& name, const operation& o, const UA_NodeId* parent){
@@ -100,7 +103,42 @@ static std::pair<std::string, UA_NodeId> addNode(const UA_Server* server, const 
 		default: break;
 	}
 
-	return addNode(server, name, v, d, parent);
+	std::string desc = "";
+
+	return addNode(server, name, v, d, desc, parent);
+}
+
+static void aktAusgang(const UA_Server* server, const address& adr, const UA_NodeId* nodeId){
+    void* v = adr.v;
+
+    UA_Variant var;
+
+    if(UA_STATUSCODE_GOOD != UA_Server_readValue((UA_Server*)server, *nodeId, &var)) return;
+
+    switch(adr.datatype){
+        case address::Datatype::Bit: {
+#ifndef PC
+            if(*(UA_Boolean*)v != *(UA_Boolean*)var.data){
+                writeBit(adr, *(UA_Boolean*)var.data);
+                memcpy(v, var.data, sizeof(UA_Boolean));
+            }
+#endif
+            break;
+        }
+        case address::Datatype::Byte: {
+#ifndef PC
+
+#endif
+            break;
+        }
+        case address::Datatype::Int16: {
+#ifndef PC
+
+#endif
+            break;
+        }
+        default: break;
+    }
 }
 
 static void aktNode(const UA_Server* server, int d, void* value, const UA_NodeId* nodeId){
@@ -189,7 +227,7 @@ static void addObjekt(const UA_Server* server, const std::string& name, const UA
 
 unsigned int sleep_time = 50000;
 
-void server(const std::map<std::string, address>& io_addresses, const std::map<std::string, operation>& operations, const bool* lauf){
+void server(const std::map<std::string, address>& io_addresses, const std::map<std::string, operation>& operations, const volatile bool* lauf){
 	int state = 0;
 
 	UA_Server *server = nullptr;
@@ -233,7 +271,8 @@ void server(const std::map<std::string, address>& io_addresses, const std::map<s
 			}
 			case 2:{
 				for(auto& n : nodeVerzeichnisEA){
-					aktNode(server, io_addresses.at(n.first), &(n.second));
+				    if(!io_addresses.at(n.first).schreibbar) aktNode(server, io_addresses.at(n.first), &(n.second));
+				    else aktAusgang(server, io_addresses.at(n.first), &(n.second));
 				}
 				for(auto& n : nodeVerzeichnisOp){
 					aktNode(server, operations.at(n.first), &(n.second));
