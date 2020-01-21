@@ -2,7 +2,7 @@
 #define EAOPCUA_EA_HPP
 
 #include "piControl.h"
-#include "piControlIf.h"
+#include "piTest/piControlIf.h"
 
 #include "types.hpp"
 

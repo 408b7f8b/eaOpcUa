@@ -4,7 +4,7 @@
 #include <map>
 #include <vector>
 #include <mutex>
-#include <open62541.h>
+#include "open62541/types.h"
 #include <functional>
 
 #include "string_split.hpp"

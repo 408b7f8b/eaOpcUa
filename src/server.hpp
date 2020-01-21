@@ -4,12 +4,11 @@
 #include <map>
 #include <iostream>
 #include <unistd.h>
-#include <open62541.h>
+#include "open62541/server.h"
+#include "open62541/server_config_default.h"
 
 #include "types.hpp"
 #include "EA.hpp"
-
-#include "open62541.h"
 
 //#define PC
 
@@ -231,7 +230,7 @@ void server(const std::map<std::string, address>& io_addresses, const std::map<s
 	int state = 0;
 
 	UA_Server *server = nullptr;
-	UA_ServerConfig *config = nullptr;
+	UA_ServerConfig config;
 	std::map<std::string, UA_NodeId> nodeVerzeichnisEA, nodeVerzeichnisOp;
 
     UA_NodeId objektEA, objectOp;
@@ -239,8 +238,8 @@ void server(const std::map<std::string, address>& io_addresses, const std::map<s
 	while(*lauf){
 		switch(state){
 			case 0:{
-				config = UA_ServerConfig_new_minimal(4840, nullptr);
-				server = UA_Server_new(config);
+                UA_ServerConfig_setMinimal(&config, 4840, nullptr);
+				server = UA_Server_newWithConfig(&config);
 
 				UA_StatusCode r1 = UA_Server_run_startup(server);
 
@@ -286,7 +285,6 @@ void server(const std::map<std::string, address>& io_addresses, const std::map<s
 	}
 
 	UA_Server_delete(server);
-	UA_ServerConfig_delete(config);
 }
 
 #endif //EAOPCUA_SERVER_HPP
