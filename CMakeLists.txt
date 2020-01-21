@@ -5,7 +5,7 @@ SET(REVPI_DIR ${CMAKE_SOURCE_DIR}/ext/piControl)
 SET(OPEN62541_DIR ${CMAKE_SOURCE_DIR}/ext/open62541)
 SET(HELFERLEIN_DIR ${CMAKE_SOURCE_DIR}/ext/helferlein)
 
-include_directories(${REVPI_DIR} ${OPEN62541_DIR}/include ${OPEN62541_DIR}/deps ${HELFERLEIN_DIR})
+include_directories(${REVPI_DIR} ${OPEN62541_DIR}/include ${OPEN62541_DIR}/build/src_generated ${OPEN62541_DIR}/arch ${OPEN62541_DIR}/plugins/include ${OPEN62541_DIR}/deps ${HELFERLEIN_DIR})
 link_directories(${OPEN62541_DIR}/build/bin)
 
 set(CMAKE_C_STANDARD 99)
