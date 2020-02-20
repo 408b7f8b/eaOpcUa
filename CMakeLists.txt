@@ -15,5 +15,5 @@ SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -z defs")
 add_executable(eaOpcUa main.cpp ${REVPI_DIR}/piTest/piControlIf.c)
 target_link_libraries(eaOpcUa open62541)
 
-configure_file(${CMAKE_SOURCE_DIR}/example_IO.txt addresses.txt COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/example_IO2.txt addresses.txt COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/example_operation.txt operations.txt COPYONLY)

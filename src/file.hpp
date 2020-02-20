@@ -16,10 +16,10 @@ std::map<std::string, address> readIODescription(const std::string &path_to_file
     if (file.is_open()) {
         std::string line;
         while (getline(file, line)) {
-            std::vector<std::string> line_parts = string_split(line, {' ', '\t', '\r', '/'});
+            std::vector<std::string> line_parts = string_split(line, {' ', '\t', '\r', '/', '%'});
 
             if (line_parts.size() > 2) {
-                ret.insert({line_parts[0], address(line_parts[1], line_parts[2])});
+                ret.insert({line_parts[0], address(line_parts[2], line_parts[3])});
                 if(line_parts[0].substr(0, 2) == "MB") ret[line_parts[0]].schreibbar = true;
             }
         }
@@ -29,14 +29,15 @@ std::map<std::string, address> readIODescription(const std::string &path_to_file
     return ret;
 }
 
-std::map<std::string, operation>
-readOpDescription(const std::string &path_to_file, std::map<std::string, address> *io_addresses) {
+std::map<std::string, operation> readOpDescription(const std::string &path_to_file, std::map<std::string, address> *io_addresses) {
     std::map<std::string, operation> ret;
 
     std::ifstream file(path_to_file);
     if (file.is_open()) {
         std::string line;
         while (getline(file, line)) {
+            if(line.substr(0, 2) == "//") continue;
+
             std::vector<std::string> line_parts = string_split(line, {'#'});
 
             if (line_parts.size() == 4) {

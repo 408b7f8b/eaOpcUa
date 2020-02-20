@@ -80,6 +80,20 @@ static std::pair<std::string, UA_NodeId> addNode(const UA_Server* server, const 
 #endif
 			break;
 		}
+        case address::Datatype::UInt16: {
+            d = UA_TYPES_UINT16;
+            //v = calloc(1, sizeof(UA_Int16));
+#ifndef PC
+            UA_UInt16 state;
+            if(readBytes(adr, 4, (std::uint8_t*) &state)){
+                memcpy(v, &state, sizeof(UA_UInt16));
+            }else{
+                //free(v);
+                return {};
+            }
+#endif
+            break;
+        }
 		default: break;
 	}
 
@@ -131,6 +145,12 @@ static void aktAusgang(const UA_Server* server, const address& adr, const UA_Nod
             break;
         }
         case address::Datatype::Int16: {
+#ifndef PC
+
+#endif
+            break;
+        }
+        case address::Datatype::UInt16: {
 #ifndef PC
 
 #endif
@@ -193,6 +213,20 @@ static void aktNode(const UA_Server* server, const address& adr, const UA_NodeId
 #endif
 			break;
 		}
+        case address::Datatype::UInt16: {
+            d = UA_TYPES_UINT16;
+            //v = calloc(1, sizeof(UA_Int16));
+#ifndef PC
+            UA_UInt16 state;
+            if(readBytes(adr, 4, (std::uint8_t*) &state)){
+                memcpy(v, &state, sizeof(UA_UInt16));
+            }else{
+                //free(v);
+                return;
+            }
+#endif
+            break;
+        }
 		default: break;
 	}
 
@@ -224,7 +258,7 @@ static void addObjekt(const UA_Server* server, const std::string& name, const UA
                                 oAttr, nullptr, nodeId);
 }
 
-unsigned int sleep_time = 50000;
+unsigned int sleep_time = 5000;
 
 void server(const std::map<std::string, address>& io_addresses, const std::map<std::string, operation>& operations, const volatile bool* lauf){
 	int state = 0;
@@ -239,6 +273,7 @@ void server(const std::map<std::string, address>& io_addresses, const std::map<s
 			case 0:{
                 server = UA_Server_new();
                 UA_ServerConfig_setDefault(UA_Server_getConfig(server));
+                auto i = UA_Server_getConfig(server);
 
 				UA_StatusCode r1 = UA_Server_run_startup(server);
 
@@ -251,7 +286,7 @@ void server(const std::map<std::string, address>& io_addresses, const std::map<s
                 addObjekt(server, std::string("EA"), &objFolder, &objektEA);
                 addObjekt(server, std::string("Generated"), &objFolder, &objectOp);
 
-				for(auto& n : io_addresses){
+				/*for(auto& n : io_addresses){
 					std::pair<std::string, UA_NodeId> nNode = addNode(server, n.first, n.second, &objektEA);
 					if(!nNode.first.empty()){
 						nodeVerzeichnisEA.insert(nNode);
@@ -262,19 +297,19 @@ void server(const std::map<std::string, address>& io_addresses, const std::map<s
 					if(!nNode.first.empty()){
 						nodeVerzeichnisOp.insert(nNode);
 					}
-				}
+				}*/
 
 				++state;
 				break;
 			}
 			case 2:{
-				for(auto& n : nodeVerzeichnisEA){
+				/*for(auto& n : nodeVerzeichnisEA){
 				    if(!io_addresses.at(n.first).schreibbar) aktNode(server, io_addresses.at(n.first), &(n.second));
 				    else aktAusgang(server, io_addresses.at(n.first), &(n.second));
 				}
 				for(auto& n : nodeVerzeichnisOp){
 					aktNode(server, operations.at(n.first), &(n.second));
-				}
+				}*/
 			}
 			default: break;
 		}
