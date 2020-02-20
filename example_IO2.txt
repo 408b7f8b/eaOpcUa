@@ -1,0 +1,40 @@
+//SYS_PROJECT_TS:20200220234612
+GLOBALS hardwareConfig
+        VAR_GLOBAL
+
+                Input AT %IW1.0: WORD := 0; //
+                O_1_i02 AT %QX1.70.0: BOOL := 0; //
+                O_2_i02 AT %QX1.70.1: BOOL := 0; //
+                O_3_i02 AT %QX1.70.2: BOOL := 0; //
+                O_4_i02 AT %QX1.70.3: BOOL := 0; //
+                O_5_i02 AT %QX1.70.4: BOOL := 0; //
+                O_6_i02 AT %QX1.70.5: BOOL := 0; //
+                O_7_i02 AT %QX1.70.6: BOOL := 0; //
+                O_8_i02 AT %QX1.70.7: BOOL := 0; //
+                O_9_i02 AT %QX1.70.8: BOOL := 0; //
+                O_10_i02 AT %QX1.70.9: BOOL := 0; //
+                O_11_i02 AT %QX1.70.10: BOOL := 0; //
+                O_12_i02 AT %QX1.70.11: BOOL := 0; //
+                O_13_i02 AT %QX1.70.12: BOOL := 0; //
+                O_14_i02 AT %QX1.70.13: BOOL := 0; //
+                O_15_i02 AT %QX1.70.14: BOOL := 0; //
+                O_16_i02 AT %QX1.70.15: BOOL := 0; //
+                InputMode_1_i02 AT %MB1.88: BYTE := 0; //
+                InputMode_2_i02 AT %MB1.89: BYTE := 0; //
+                InputMode_3_i02 AT %MB1.90: BYTE := 0; //
+                InputMode_4_i02 AT %MB1.91: BYTE := 0; //
+                InputMode_5_i02 AT %MB1.92: BYTE := 0; //
+                InputMode_6_i02 AT %MB1.93: BYTE := 0; //
+                InputMode_7_i02 AT %MB1.94: BYTE := 0; //
+                InputMode_8_i02 AT %MB1.95: BYTE := 0; //
+                InputMode_9_i02 AT %MB1.96: BYTE := 0; //
+                InputMode_10_i02 AT %MB1.97: BYTE := 0; //
+                InputMode_11_i02 AT %MB1.98: BYTE := 0; //
+                InputMode_12_i02 AT %MB1.99: BYTE := 0; //
+                InputMode_13_i02 AT %MB1.100: BYTE := 0; //
+                InputMode_14_i02 AT %MB1.101: BYTE := 0; //
+                InputMode_15_i02 AT %MB1.102: BYTE := 0; //
+                InputMode_16_i02 AT %MB1.103: BYTE := 0; //
+
+        END_VAR
+END_GLOBALS
