@@ -229,8 +229,7 @@ unsigned int sleep_time = 50000;
 void server(const std::map<std::string, address>& io_addresses, const std::map<std::string, operation>& operations, const volatile bool* lauf){
 	int state = 0;
 
-	UA_Server *server = nullptr;
-	UA_ServerConfig config;
+	UA_Server* server = nullptr;
 	std::map<std::string, UA_NodeId> nodeVerzeichnisEA, nodeVerzeichnisOp;
 
     UA_NodeId objektEA, objectOp;
@@ -238,8 +237,8 @@ void server(const std::map<std::string, address>& io_addresses, const std::map<s
 	while(*lauf){
 		switch(state){
 			case 0:{
-                UA_ServerConfig_setMinimal(&config, 4840, nullptr);
-				server = UA_Server_newWithConfig(&config);
+                server = UA_Server_new();
+                UA_ServerConfig_setDefault(UA_Server_getConfig(server));
 
 				UA_StatusCode r1 = UA_Server_run_startup(server);
 
