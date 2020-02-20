@@ -19,6 +19,11 @@ int main(int argc, char** argv) {
 	signal(SIGTERM, int_handler);
 
 	if(argc < 3){
+	    std::cout << "eaOpcUa für Kunbus Revolution Pi" << std::endl
+                  << "Starten mit Parametern:" << std::endl
+                  << "-a pfad_zu_adresstabelle" << std::endl
+                  << "-o pfad_zu_operationentabelle" << std::endl;
+
 	    return -1;
 	}
 
@@ -29,13 +34,10 @@ int main(int argc, char** argv) {
             adressen = std::string(argv[++i]);
         }else if(strncmp(argv[i], "-o", 2) == 0){
             operationen = std::string(argv[++i]);
-        }else if(strncmp(argv[i], "-h", 2) == 0){
-            std::cout << "eaOpcUa für Kunbus Revolution Pi" << std::endl
-                      << "Starten mit Parametern:" << std::endl
-                      << "-a pfad_zu_adresstabelle" << std::endl
-                      << "-o pfad_zu_operationentabelle" << std::endl;
         }
 	}
+
+	if(adressen.empty() || operationen.empty()) return -1;
 
 	std::map<std::string, address> io_addresses = readIODescription(adressen);
 	std::map<std::string, operation> operations = readOpDescription(operationen, &io_addresses);

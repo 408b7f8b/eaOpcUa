@@ -286,7 +286,7 @@ void server(const std::map<std::string, address>& io_addresses, const std::map<s
                 addObjekt(server, std::string("EA"), &objFolder, &objektEA);
                 addObjekt(server, std::string("Generated"), &objFolder, &objectOp);
 
-				/*for(auto& n : io_addresses){
+				for(auto& n : io_addresses){
 					std::pair<std::string, UA_NodeId> nNode = addNode(server, n.first, n.second, &objektEA);
 					if(!nNode.first.empty()){
 						nodeVerzeichnisEA.insert(nNode);
@@ -297,19 +297,19 @@ void server(const std::map<std::string, address>& io_addresses, const std::map<s
 					if(!nNode.first.empty()){
 						nodeVerzeichnisOp.insert(nNode);
 					}
-				}*/
+				}
 
 				++state;
 				break;
 			}
 			case 2:{
-				/*for(auto& n : nodeVerzeichnisEA){
+				for(auto& n : nodeVerzeichnisEA){
 				    if(!io_addresses.at(n.first).schreibbar) aktNode(server, io_addresses.at(n.first), &(n.second));
 				    else aktAusgang(server, io_addresses.at(n.first), &(n.second));
 				}
 				for(auto& n : nodeVerzeichnisOp){
 					aktNode(server, operations.at(n.first), &(n.second));
-				}*/
+				}
 			}
 			default: break;
 		}
