@@ -260,7 +260,7 @@ static void addObjekt(const UA_Server* server, const std::string& name, const UA
 
 unsigned int sleep_time = 5000;
 
-void server(const std::map<std::string, address>& io_addresses, const std::map<std::string, operation>& operations, const volatile bool* lauf){
+void server(const std::map<std::string, address>& io_addresses, const std::map<std::string, operation>& operations, const volatile bool* lauf, uint16_t port){
 	int state = 0;
 
 	UA_Server* server = nullptr;
@@ -272,8 +272,9 @@ void server(const std::map<std::string, address>& io_addresses, const std::map<s
 		switch(state){
 			case 0:{
                 server = UA_Server_new();
-                UA_ServerConfig_setDefault(UA_Server_getConfig(server));
-                auto i = UA_Server_getConfig(server);
+
+                auto* c = UA_Server_getConfig(server);
+                UA_ServerConfig_setMinimal(c, port, nullptr);
 
 				UA_StatusCode r1 = UA_Server_run_startup(server);
 

@@ -28,12 +28,15 @@ int main(int argc, char** argv) {
 	}
 
 	std::string adressen, operationen;
+	uint16_t port = 4840;
 
 	for(int i = 1; i < argc; ++i){
         if(strncmp(argv[i], "-a", 2) == 0){
             adressen = std::string(argv[++i]);
         }else if(strncmp(argv[i], "-o", 2) == 0){
             operationen = std::string(argv[++i]);
+        }else if(strncmp(argv[i], "-p", 2) == 0){
+            port = std::stoi(std::string(argv[++i]));
         }
 	}
 
@@ -42,7 +45,7 @@ int main(int argc, char** argv) {
 	std::map<std::string, address> io_addresses = readIODescription(adressen);
 	std::map<std::string, operation> operations = readOpDescription(operationen, &io_addresses);
 
-	server(io_addresses, operations, &lauf);
+	server(io_addresses, operations, &lauf, port);
 
 	return 0;
 }
